@@ -1,15 +1,26 @@
+// V2 — version enrichie avec Supabase
 const express = require('express');
 const router = express.Router();
+const { getAvailableSlots } = require('./calendarService');
 
 router.post('/', async (req, res) => {
   const { call_id, message } = req.body;
 
-  console.log(`📞 New message from call ${call_id}: ${message}`);
+  if (message.toLowerCase().includes("disponible")) {
+    const slots = await getAvailableSlots();
 
-  // TODO: envoyer à OpenAI, Supabase, etc.
+    const formatted = slots.map(slot =>
+      `${slot.date} à ${slot.hour}`
+    ).slice(0, 3).join(', ');
+
+    return res.json({
+      response: `Voici les prochains créneaux disponibles : ${formatted}. Voulez-vous réserver l’un d’eux ?`,
+      end_call: false,
+    });
+  }
 
   return res.json({
-    response: `Merci pour votre message. Nous allons le traiter.`,
+    response: "Merci pour votre message. Pour connaître nos disponibilités, dites 'disponible'.",
     end_call: false,
   });
 });
