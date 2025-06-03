@@ -5,6 +5,9 @@ const { createClient } = require('@supabase/supabase-js');
 console.log("🔗 SUPABASE_URL:", process.env.SUPABASE_URL);
 console.log("🔑 SUPABASE_ANON_KEY starts with:", process.env.SUPABASE_ANON_KEY?.slice(0, 10));
 
+const fetch = require('cross-fetch');
+global.fetch = fetch; // Force supabase-js à utiliser ce fetch
+
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_ANON_KEY
