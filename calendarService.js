@@ -1,24 +1,17 @@
 const { createClient } = require('@supabase/supabase-js');
+const fetch = require('cross-fetch');
+global.fetch = fetch; // Important pour Node.js
 
+require('dotenv').config();
 
 // 🔍 Debug temporaire
 console.log("🔗 SUPABASE_URL:", process.env.SUPABASE_URL);
 console.log("🔑 SUPABASE_ANON_KEY starts with:", process.env.SUPABASE_ANON_KEY?.slice(0, 10));
 
-const fetch = require('cross-fetch');
-global.fetch = fetch; // Force supabase-js à utiliser ce fetch
-
 const supabase = createClient(
   process.env.SUPABASE_URL,
   process.env.SUPABASE_ANON_KEY
 );
-
-
-// Test réseau direct (juste pour debug)
-fetch('https://gfijutmvgmjlohekcbdz.supabase.co')
-  .then(res => console.log("✅ Test réseau OK:", res.status))
-  .catch(err => console.error("❌ Erreur réseau directe:", err.message));
-
 
 async function getAvailableSlots() {
   const { data, error } = await supabase
@@ -35,9 +28,6 @@ async function getAvailableSlots() {
 
   return data;
 }
-
-module.exports = { getAvailableSlots };
-
 
 async function addTestSlot() {
   const { data, error } = await supabase
@@ -59,3 +49,5 @@ async function addTestSlot() {
 
 // Décommenter pour tester en local uniquement
 // addTestSlot();
+
+module.exports = { getAvailableSlots };
