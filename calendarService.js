@@ -1,10 +1,10 @@
 const { createClient } = require('@supabase/supabase-js');
 const fetch = require('cross-fetch');
-global.fetch = fetch; // Important pour Node.js
+global.fetch = fetch;
 
 require('dotenv').config();
 
-// 🔍 Debug temporaire
+// 🔍 Debug (optionnel à supprimer en prod)
 console.log("🔗 SUPABASE_URL:", process.env.SUPABASE_URL);
 console.log("🔑 SUPABASE_ANON_KEY starts with:", process.env.SUPABASE_ANON_KEY?.slice(0, 10));
 
@@ -28,26 +28,5 @@ async function getAvailableSlots() {
 
   return data;
 }
-
-async function addTestSlot() {
-  const { data, error } = await supabase
-    .from('agenda')
-    .insert([
-      {
-        date: '2025-06-05',
-        hour: '14:00',
-        is_booked: false,
-      }
-    ]);
-
-  if (error) {
-    console.error('❌ INSERT Supabase error:', error);
-  } else {
-    console.log('✅ INSERT successful:', data);
-  }
-}
-
-// Décommenter pour tester en local uniquement
-// addTestSlot();
 
 module.exports = { getAvailableSlots };
