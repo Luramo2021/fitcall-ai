@@ -24,11 +24,20 @@ router.post('/', async (req, res) => {
 
   // 🤖 Sinon, réponse via OpenAI
   try {
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [{ role: "user", content: message }],
-      temperature: 0.7,
-    });
+   const completion = await openai.chat.completions.create({
+  model: "gpt-3.5-turbo",
+  messages: [
+    {
+      role: "system",
+      content: "Tu es un assistant vocal pour un centre de remise en forme. Ta mission est de répondre aux questions des clients sur les horaires, les services proposés, les coachs disponibles, et la prise de rendez-vous. Tu dois être poli, clair, et orienté solution.",
+    },
+    {
+      role: "user",
+      content: message,
+    }
+  ],
+  temperature: 0.7,
+});
 
     const aiResponse = completion.choices[0].message.content;
 
