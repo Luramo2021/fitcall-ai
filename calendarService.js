@@ -1,11 +1,15 @@
 const { createClient } = require('@supabase/supabase-js');
 
+const { createClient } = require('@supabase/supabase-js');
+
+// 🔍 Debug temporaire
+console.log("🔗 SUPABASE_URL:", process.env.SUPABASE_URL);
+console.log("🔑 SUPABASE_ANON_KEY starts with:", process.env.SUPABASE_ANON_KEY?.slice(0, 10));
+
 const supabase = createClient(
-  console.log("🔗 SUPABASE_URL:", process.env.SUPABASE_URL);
-  console.log("🔑 SUPABASE_ANON_KEY starts with:", process.env.SUPABASE_ANON_KEY?.slice(0, 10));
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
 );
-  //process.env.SUPABASE_URL,
- // process.env.SUPABASE_ANON_KEY
 
 async function getAvailableSlots() {
   const { data, error } = await supabase
