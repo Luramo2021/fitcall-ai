@@ -54,4 +54,35 @@ router.post('/', async (req, res) => {
   }
 });
 
+
+router.post('/test-reservation', async (req, res) => {
+  const { createClient } = require('@supabase/supabase-js');
+  const supabase = createClient(
+    process.env.SUPABASE_URL,
+    process.env.SUPABASE_ANON_KEY
+  );
+
+  const { call_id, first_name, email, service_type, date, hour } = req.body;
+
+  const { data, error } = await supabase
+    .from('reservations')
+    .insert([
+      {
+        call_id,
+        first_name,
+        email,
+        service_type,
+        date,
+        hour
+      }
+    ]);
+
+  if (error) {
+    console.error('❌ INSERT ERROR:', error);
+    return res.status(500).json({ error: "Insert failed", details: error });
+  }
+
+  return res.json({ success: true, data });
+});
+
 module.exports = router;
