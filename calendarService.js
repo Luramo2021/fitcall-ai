@@ -13,6 +13,13 @@ const supabase = createClient(
   process.env.SUPABASE_ANON_KEY
 );
 
+
+// Test réseau direct (juste pour debug)
+fetch('https://gfijutmvgmjlohekcbdz.supabase.co')
+  .then(res => console.log("✅ Test réseau OK:", res.status))
+  .catch(err => console.error("❌ Erreur réseau directe:", err.message));
+
+
 async function getAvailableSlots() {
   const { data, error } = await supabase
     .from('agenda')
