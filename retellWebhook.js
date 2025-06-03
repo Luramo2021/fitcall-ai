@@ -1,6 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const { getAvailableSlots } = require('./calendarService');
+const { createClient } = require('@supabase/supabase-js');
+require('dotenv').config();
+
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
+);
 
 router.post('/', async (req, res) => {
   const { call_id, message } = req.body;
@@ -24,9 +31,7 @@ router.post('/', async (req, res) => {
   });
 });
 
-module.exports = router;
-
-
+// ✅ Test INSERT route
 router.post('/test-insert', async (req, res) => {
   const { data, error } = await supabase
     .from('agenda')
@@ -40,3 +45,4 @@ router.post('/test-insert', async (req, res) => {
   return res.json({ success: true, data });
 });
 
+module.exports = router; // ✅ à la toute fin
