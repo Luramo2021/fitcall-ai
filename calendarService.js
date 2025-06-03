@@ -1,6 +1,5 @@
 const { createClient } = require('@supabase/supabase-js');
 
-const { createClient } = require('@supabase/supabase-js');
 
 // 🔍 Debug temporaire
 console.log("🔗 SUPABASE_URL:", process.env.SUPABASE_URL);
