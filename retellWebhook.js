@@ -64,6 +64,24 @@ router.post('/test-reservation', async (req, res) => {
 
   const { call_id, first_name, email, service_type, date, hour } = req.body;
 
+  // ✅ Vérifier que le créneau est bien disponible dans la table agenda
+  const { data: existing, error: checkError } = await supabase
+    .from('agenda')
+    .select('*')
+    .eq('date', date)
+    .eq('hour', hour)
+    .eq('is_booked', false);
+
+  if (checkError) {
+    console.error("❌ Erreur lors de la vérification du créneau:", checkError);
+    return res.status(500).json({ error: "Erreur lors de la vérification du créneau", details: checkError });
+  }
+
+  if (!existing.length) {
+    return res.status(400).json({ error: "Créneau non disponible" });
+  }
+
+  // ✅ Insérer la réservation dans la table reservations
   const { data, error } = await supabase
     .from('reservations')
     .insert([
@@ -81,6 +99,13 @@ router.post('/test-reservation', async (req, res) => {
     console.error('❌ INSERT ERROR:', error);
     return res.status(500).json({ error: "Insert failed", details: error });
   }
+
+  // ✅ Mettre à jour le créneau comme réservé
+  await supabase
+    .from('agenda')
+    .update({ is_booked: true })
+    .eq('date', date)
+    .eq('hour', hour);
 
   return res.json({ success: true, data });
 });
