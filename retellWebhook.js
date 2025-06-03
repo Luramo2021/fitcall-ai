@@ -25,3 +25,18 @@ router.post('/', async (req, res) => {
 });
 
 module.exports = router;
+
+
+router.post('/test-insert', async (req, res) => {
+  const { data, error } = await supabase
+    .from('agenda')
+    .insert([{ date: '2025-06-05', hour: '14:30', is_booked: false }]);
+
+  if (error) {
+    console.error("❌ INSERT ERROR:", error);
+    return res.status(500).json({ error: "Insert failed" });
+  }
+
+  return res.json({ success: true, data });
+});
+
